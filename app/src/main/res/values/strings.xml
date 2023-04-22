@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SharedList</string>
+    <string name="change_list">Change list</string>
+    <string name="current_list">Current list id:</string>
+    <string name="join_list_hint">Join list with id</string>
+    <string name="join_list">Join list</string>
+    <string name="list_empty_error">List can\'t be empty</string>
+    <string name="delete_selected">Delete selected</string>
+
+
+    <string name="list_key">list</string>
+    <string name="shared_prefs">sharedListPrefs</string>
+</resources>
