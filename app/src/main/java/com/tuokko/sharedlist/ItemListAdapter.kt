@@ -1,44 +1,42 @@
 package com.tuokko.sharedlist
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.tuokko.sharedlist.screens.SingleItemView
+import com.tuokko.sharedlist.screens.SingleItemViewImp
 
-class ItemListAdapter(val listener: Listener) :
-    RecyclerView.Adapter<ItemListAdapter.ViewHolder>()
+class ItemListAdapter(private val listener: Listener) :
+    RecyclerView.Adapter<ItemListAdapter.ViewHolder>(), SingleItemView.Listener
 {
+    companion object {
+        private const val TAG = "ItemListAdapter"
+    }
+
     private val itemArray: ArrayList<SingleItem> = ArrayList()
 
     interface Listener {
         fun onItemClicked(item: SingleItem)
     }
 
-    companion object {
-        private const val TAG = "ItemListAdapter"
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.single_item, parent, false)
-        return ViewHolder(view)
+        val singleItem = SingleItemViewImp(LayoutInflater.from(parent.context), parent)
+        singleItem.addListener(this)
+        return ViewHolder(singleItem)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d(TAG, "Binding sigle view at position: $position")
-        holder.setItemText(itemArray[position].name)
-        holder.setItemChecked(itemArray[position].checked)
+        Log.d(TAG, "onBindViewHolder() Binding single view at position: $position")
+        holder.singleItemView.setItem(itemArray[position])
     }
 
     override fun getItemCount(): Int {
         return itemArray.size
+    }
+
+    override fun onItemClicked(item: SingleItem) {
+        listener.onItemClicked(item)
     }
 
     fun addItemToList(item: SingleItem) {
@@ -60,35 +58,7 @@ class ItemListAdapter(val listener: Listener) :
         notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        /*
-        init {
-            itemView.findViewById<ConstraintLayout>(R.id.itemParentLayout).setOnClickListener {
-                if (listID == null) return@setOnClickListener
-                Log.d(TAG, "Single item clicked")
-                val checkBox = itemView.findViewById<CheckBox>(R.id.itemCheckbox)
-                val newValueForChecked = !checkBox.isChecked
-                val itemName = itemView.findViewById<TextView>(R.id.itemText).text.toString()
-                Firebase.firestore.collection(listID).document(itemName).update("checked", newValueForChecked)
-                        .addOnSuccessListener {
-                            checkBox.isChecked = newValueForChecked
-                        }
-                        .addOnFailureListener {
-                            Log.d(TAG, "Updating checked value failed, error: ${it.message}")
-                        }
-            }
-        }
-
-         */
-        fun setItemText(text: String) {
-            Log.d(TAG, "Adding single list item text to: $text")
-            itemView.findViewById<TextView>(R.id.itemText).text = text
-        }
-        fun setItemChecked(checked: Boolean) {
-            itemView.findViewById<CheckBox>(R.id.itemCheckbox).isChecked = checked
-        }
-    }
+    class ViewHolder(val singleItemView: SingleItemView) : RecyclerView.ViewHolder(singleItemView.getRootView())
 
     class SingleItem(val name: String, val checked: Boolean)
 }
