@@ -1,6 +1,5 @@
 package com.tuokko.sharedlist.screens
 
-import com.tuokko.sharedlist.ItemListAdapter
 import com.tuokko.sharedlist.ObservableView
 
 interface ListView: ObservableView<ListView.Listener> {
@@ -11,5 +10,6 @@ interface ListView: ObservableView<ListView.Listener> {
     }
 
     fun updateListItems(items: List<ItemListAdapter.SingleItem>)
+    fun updateListItem(item: ItemListAdapter.SingleItem)
 
 }

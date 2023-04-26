@@ -1,6 +1,5 @@
 package com.tuokko.sharedlist.screens
 
-import com.tuokko.sharedlist.ItemListAdapter
 import com.tuokko.sharedlist.ObservableView
 
 interface SingleItemView: ObservableView<SingleItemView.Listener> {

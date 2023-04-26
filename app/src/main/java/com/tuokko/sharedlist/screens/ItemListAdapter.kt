@@ -1,11 +1,9 @@
-package com.tuokko.sharedlist
+package com.tuokko.sharedlist.screens
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tuokko.sharedlist.screens.SingleItemView
-import com.tuokko.sharedlist.screens.SingleItemViewImp
 
 class ItemListAdapter(private val listener: Listener) :
     RecyclerView.Adapter<ItemListAdapter.ViewHolder>(), SingleItemView.Listener
@@ -45,9 +43,16 @@ class ItemListAdapter(private val listener: Listener) :
         }
         if (alreadyAdded) return
         itemArray.add(item)
-        notifyDataSetChanged()
+        notifyItemChanged(itemArray.lastIndex)
     }
 
+    fun updateItem(item: SingleItem) {
+        val itemToBeUpdated = itemArray.find { it.name == item.name }
+        if (itemToBeUpdated == null || itemToBeUpdated.checked == item.checked) return
+        val indexToBeUpdated = itemArray.indexOf(itemToBeUpdated)
+        itemArray[indexToBeUpdated] = item
+        notifyItemChanged(indexToBeUpdated)
+    }
     fun deleteItemFromList(item: String) {
         for (it in itemArray) {
             if (it.name == item) {

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tuokko.sharedlist.BaseView
-import com.tuokko.sharedlist.ItemListAdapter
 import com.tuokko.sharedlist.databinding.ActivityMainBinding
 
 class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListView.Listener>(),
@@ -46,6 +45,10 @@ class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListVi
             Log.d(TAG, "updateItems() Item in list: ${item.name} checked: ${item.checked}")
             itemListAdapter.addItemToList(item)
         }
+    }
+
+    override fun updateListItem(item: ItemListAdapter.SingleItem) {
+        itemListAdapter.updateItem(item)
     }
 
     override fun onItemClicked(item: ItemListAdapter.SingleItem) {

@@ -3,7 +3,6 @@ package com.tuokko.sharedlist.screens
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.tuokko.sharedlist.BaseView
-import com.tuokko.sharedlist.ItemListAdapter
 import com.tuokko.sharedlist.databinding.SingleItemBinding
 
 class SingleItemViewImp(inflater: LayoutInflater, parent: ViewGroup): BaseView<SingleItemView.Listener>(), SingleItemView {
@@ -12,6 +11,14 @@ class SingleItemViewImp(inflater: LayoutInflater, parent: ViewGroup): BaseView<S
 
     init {
         setRootView(binding.root)
+
+        binding.itemParentLayout.setOnClickListener {
+            val name = binding.itemText.text.toString()
+            val checked = binding.itemCheckbox.isChecked
+            for (listener in getListeners()) {
+                listener.onItemClicked(ItemListAdapter.SingleItem(name, !checked))
+            }
+        }
     }
 
     override fun setItem(item: ItemListAdapter.SingleItem) {

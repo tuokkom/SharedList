@@ -4,14 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tuokko.sharedlist.ChangeListActivity
-import com.tuokko.sharedlist.ItemListAdapter
 import com.tuokko.sharedlist.R
 
 class MainActivity : AppCompatActivity(), ListView.Listener {
@@ -77,12 +72,11 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
 
         db.collection(listID!!).get()
             .addOnSuccessListener { result ->
-                var itemList = mutableListOf<ItemListAdapter.SingleItem>()
+                val itemList = mutableListOf<ItemListAdapter.SingleItem>()
                 for (item in result) {
                     Log.d(TAG, "Received data from database, item: ${item.id}")
                     Log.d(TAG, "Received data from database, more info: ${item.data}")
                     val checkState: Boolean = item.data["checked"] as Boolean
-                    //itemListAdapter.addItemToList(item.id, checkState)
                     itemList.add(ItemListAdapter.SingleItem(item.id, checkState))
                 }
                 listView.updateListItems(itemList)
@@ -128,6 +122,14 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
 
     override fun onItemClicked(item: ItemListAdapter.SingleItem) {
         Log.d(TAG, "onItemClicked() Item name: ${item.name}")
+        db.collection(listID!!).document(item.name).update("checked", item.checked)
+            .addOnSuccessListener {
+                Log.d(TAG, "onItemClicked() Item updated to state: ${item.checked}")
+                listView.updateListItem(item)
+            }
+            .addOnFailureListener {
+                Log.e(TAG, "onItemClicked() Item update failed")
+            }
     }
 
     override fun onItemAdded(item: ItemListAdapter.SingleItem) {
