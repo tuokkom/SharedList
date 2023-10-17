@@ -11,5 +11,5 @@ interface ListView: ObservableView<ListView.Listener> {
 
     fun updateListItems(items: List<ItemListAdapter.SingleItem>)
     fun updateListItem(item: ItemListAdapter.SingleItem)
-
+    fun deleteListItem(itemName: String)
 }

@@ -57,10 +57,10 @@ class ItemListAdapter(private val listener: Listener) :
         for (it in itemArray) {
             if (it.name == item) {
                 itemArray.remove(it)
+                notifyItemRemoved(itemArray.indexOf(it))
                 break
             }
         }
-        notifyDataSetChanged()
     }
 
     class ViewHolder(val singleItemView: SingleItemView) : RecyclerView.ViewHolder(singleItemView.getRootView())

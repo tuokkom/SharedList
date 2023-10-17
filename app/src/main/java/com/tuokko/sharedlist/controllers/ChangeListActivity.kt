@@ -1,34 +1,41 @@
-package com.tuokko.sharedlist
+package com.tuokko.sharedlist.controllers
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.tuokko.sharedlist.R
 import com.tuokko.sharedlist.screens.MainActivity
-//import kotlinx.android.synthetic.main.activity_change_list.*
+import com.tuokko.sharedlist.views.ChangeListView
 
-class ChangeListActivity : AppCompatActivity() {
+class ChangeListActivity : AppCompatActivity(), ChangeListView.Listener {
     companion object {
         const val TAG = "ChangeListActivity"
     }
 
+    private lateinit var view: ChangeListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_change_list)
+        view = ChangeListView(layoutInflater, null);
 
-        /*
-        joinListButton.setOnClickListener {
-            val listToBeJoined = listEditText.text.toString()
-            if (listToBeJoined.isEmpty()) {
-                emptlyListErrorText.alpha = 1.0f
-                return@setOnClickListener
-            }
-            joinList(listToBeJoined)
-        }
+        setContentView(view.getRootView())
+
         updateListID()
+    }
 
-         */
+    override fun onStart() {
+        super.onStart()
+        view.addListener(this)
+    }
+
+    override fun onStop() {
+        view.removeListener(this)
+        super.onStop()
+    }
+
+    override fun onJoinListClicked(listId: String) {
+        joinList(listId)
     }
 
     private fun joinList(list: String) {
@@ -44,7 +51,7 @@ class ChangeListActivity : AppCompatActivity() {
 
     private fun updateListID() {
         val sharedPref = getSharedPreferences(getString(R.string.shared_prefs), MODE_PRIVATE)
-        val listID = sharedPref.getString(getString(R.string.list_key), "")
-        //currentListId.text = listID
+        val listID = sharedPref.getString(getString(R.string.list_key), "") ?: return
+        view.setCurrentListId(listID)
     }
 }

@@ -34,9 +34,10 @@ class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListVi
             }
         }
 
-        val itemListRecyclerView = binding.itemListRecyclerView
-        itemListRecyclerView.adapter = itemListAdapter
-        itemListRecyclerView.layoutManager = LinearLayoutManager(getContext())
+        binding.itemListRecyclerView.apply {
+            adapter = itemListAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
     }
 
 
@@ -45,10 +46,15 @@ class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListVi
             Log.d(TAG, "updateItems() Item in list: ${item.name} checked: ${item.checked}")
             itemListAdapter.addItemToList(item)
         }
+        binding.addItemEditText.text.clear()
     }
 
     override fun updateListItem(item: ItemListAdapter.SingleItem) {
         itemListAdapter.updateItem(item)
+    }
+
+    override fun deleteListItem(itemName: String) {
+        itemListAdapter.deleteItemFromList(itemName)
     }
 
     override fun onItemClicked(item: ItemListAdapter.SingleItem) {

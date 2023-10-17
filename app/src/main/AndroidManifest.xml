@@ -8,7 +8,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SharedList">
-        <activity android:name=".ChangeListActivity"
+        <activity android:name=".controllers.ChangeListActivity"
             android:exported="false">
         </activity>
         <activity android:name=".screens.MainActivity"

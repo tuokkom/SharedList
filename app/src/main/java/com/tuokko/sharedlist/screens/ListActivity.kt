@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.tuokko.sharedlist.ChangeListActivity
+import com.tuokko.sharedlist.controllers.ChangeListActivity
 import com.tuokko.sharedlist.R
 
 class MainActivity : AppCompatActivity(), ListView.Listener {
@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
     private fun updateListFromDatabase() {
         if (listID == null) return
 
+        /*
         db.collection(listID!!).get()
             .addOnSuccessListener { result ->
                 val itemList = mutableListOf<ItemListAdapter.SingleItem>()
@@ -81,6 +82,8 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
                 }
                 listView.updateListItems(itemList)
         }
+
+         */
     }
 
     private fun getCurrentListID() {
@@ -114,6 +117,7 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
                 .addOnSuccessListener {
                     Log.d(TAG, "deleteSingleItem() Item: $itemName deleted")
                     //itemListAdapter.deleteItemFromList(itemName)
+                    listView.deleteListItem(itemName)
                 }
                 .addOnFailureListener {
                     Log.d(TAG, "Failed to delete item: $itemName, error: ${it.message}")
