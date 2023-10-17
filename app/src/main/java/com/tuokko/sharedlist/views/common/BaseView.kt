@@ -1,4 +1,4 @@
-package com.tuokko.sharedlist
+package com.tuokko.sharedlist.views.common
 
 import android.content.Context
 import android.view.View

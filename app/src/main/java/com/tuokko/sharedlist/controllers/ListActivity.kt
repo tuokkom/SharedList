@@ -1,4 +1,4 @@
-package com.tuokko.sharedlist.screens
+package com.tuokko.sharedlist.controllers
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.tuokko.sharedlist.controllers.ChangeListActivity
 import com.tuokko.sharedlist.R
+import com.tuokko.sharedlist.views.listview.ItemListAdapter
+import com.tuokko.sharedlist.views.listview.ListView
+import com.tuokko.sharedlist.views.listview.ListViewImp
 
 class MainActivity : AppCompatActivity(), ListView.Listener {
 
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
     private fun updateListFromDatabase() {
         if (listID == null) return
 
-        /*
+
         db.collection(listID!!).get()
             .addOnSuccessListener { result ->
                 val itemList = mutableListOf<ItemListAdapter.SingleItem>()
@@ -83,7 +85,7 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
                 listView.updateListItems(itemList)
         }
 
-         */
+
     }
 
     private fun getCurrentListID() {

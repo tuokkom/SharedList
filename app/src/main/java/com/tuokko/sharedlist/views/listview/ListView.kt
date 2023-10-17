@@ -1,6 +1,6 @@
-package com.tuokko.sharedlist.screens
+package com.tuokko.sharedlist.views.listview
 
-import com.tuokko.sharedlist.ObservableView
+import com.tuokko.sharedlist.views.common.ObservableView
 
 interface ListView: ObservableView<ListView.Listener> {
     interface Listener {

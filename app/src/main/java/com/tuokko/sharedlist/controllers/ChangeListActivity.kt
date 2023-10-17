@@ -4,8 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.tuokko.sharedlist.R
-import com.tuokko.sharedlist.screens.MainActivity
+import com.tuokko.sharedlist.models.AppPreferences
 import com.tuokko.sharedlist.views.ChangeListView
 
 class ChangeListActivity : AppCompatActivity(), ChangeListView.Listener {
@@ -14,10 +13,11 @@ class ChangeListActivity : AppCompatActivity(), ChangeListView.Listener {
     }
 
     private lateinit var view: ChangeListView
+    private val prefs = AppPreferences(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        view = ChangeListView(layoutInflater, null);
+        view = ChangeListView(layoutInflater, null)
 
         setContentView(view.getRootView())
 
@@ -40,18 +40,14 @@ class ChangeListActivity : AppCompatActivity(), ChangeListView.Listener {
 
     private fun joinList(list: String) {
         Log.d(TAG, "New list to join: $list")
-        val sharedPref = getSharedPreferences(getString(R.string.shared_prefs), MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putString(getString(R.string.list_key), list)
-        editor.apply()
+        prefs.setListId(list)
         updateListID()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 
     private fun updateListID() {
-        val sharedPref = getSharedPreferences(getString(R.string.shared_prefs), MODE_PRIVATE)
-        val listID = sharedPref.getString(getString(R.string.list_key), "") ?: return
-        view.setCurrentListId(listID)
+        val listId = prefs.getListId() ?: return
+        view.setCurrentListId(listId)
     }
 }

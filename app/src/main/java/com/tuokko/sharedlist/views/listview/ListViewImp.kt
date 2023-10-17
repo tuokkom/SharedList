@@ -1,11 +1,11 @@
-package com.tuokko.sharedlist.screens
+package com.tuokko.sharedlist.views.listview
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tuokko.sharedlist.BaseView
 import com.tuokko.sharedlist.databinding.ActivityMainBinding
+import com.tuokko.sharedlist.views.common.BaseView
 
 class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListView.Listener>(),
     ListView, ItemListAdapter.Listener {
@@ -21,7 +21,8 @@ class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListVi
 
         binding.addItemButton.setOnClickListener {
             Log.d(TAG, "init() addItemButton clicked")
-            val itemToBeAdded = ItemListAdapter.SingleItem(binding.addItemEditText.text.toString(), false)
+            val itemToBeAdded =
+                ItemListAdapter.SingleItem(binding.addItemEditText.text.toString(), false)
             for (listener in getListeners()) {
                 listener.onItemAdded(itemToBeAdded)
             }

@@ -11,7 +11,7 @@
         <activity android:name=".controllers.ChangeListActivity"
             android:exported="false">
         </activity>
-        <activity android:name=".screens.MainActivity"
+        <activity android:name=".controllers.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

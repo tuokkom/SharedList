@@ -1,4 +1,4 @@
-package com.tuokko.sharedlist.screens
+package com.tuokko.sharedlist.views.listview
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,7 +19,7 @@ class ItemListAdapter(private val listener: Listener) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val singleItem = SingleItemViewImp(LayoutInflater.from(parent.context), parent)
+        val singleItem = SingleItemView(LayoutInflater.from(parent.context), parent)
         singleItem.addListener(this)
         return ViewHolder(singleItem)
     }

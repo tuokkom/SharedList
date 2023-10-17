@@ -1,11 +1,15 @@
-package com.tuokko.sharedlist.screens
+package com.tuokko.sharedlist.views.listview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.tuokko.sharedlist.BaseView
+import com.tuokko.sharedlist.views.common.BaseView
 import com.tuokko.sharedlist.databinding.SingleItemBinding
 
-class SingleItemViewImp(inflater: LayoutInflater, parent: ViewGroup): BaseView<SingleItemView.Listener>(), SingleItemView {
+class SingleItemView(inflater: LayoutInflater, parent: ViewGroup): BaseView<SingleItemView.Listener>() {
+
+    interface Listener {
+        fun onItemClicked(item: ItemListAdapter.SingleItem)
+    }
 
     private var binding: SingleItemBinding = SingleItemBinding.inflate(inflater, parent, false)
 
@@ -21,7 +25,7 @@ class SingleItemViewImp(inflater: LayoutInflater, parent: ViewGroup): BaseView<S
         }
     }
 
-    override fun setItem(item: ItemListAdapter.SingleItem) {
+    fun setItem(item: ItemListAdapter.SingleItem) {
         binding.itemText.text = item.name
         binding.itemCheckbox.isChecked = item.checked
     }
