@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tuokko.sharedlist.databinding.ActivityMainBinding
+import com.tuokko.sharedlist.databinding.ToolbarBinding
 import com.tuokko.sharedlist.views.common.BaseView
 
 class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListView.Listener>(),
@@ -15,6 +16,8 @@ class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListVi
 
     private var binding: ActivityMainBinding = ActivityMainBinding.inflate(inflater, parent, false)
     private var itemListAdapter: ItemListAdapter = ItemListAdapter(this)
+
+    private var toolBarBinding: ToolbarBinding = ToolbarBinding.inflate(inflater, binding.toolbar, true)
 
     init {
         setRootView(binding.root)
@@ -38,6 +41,12 @@ class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListVi
         binding.itemListRecyclerView.apply {
             adapter = itemListAdapter
             layoutManager = LinearLayoutManager(context)
+        }
+
+        toolBarBinding.changeList.setOnClickListener {
+            for (listener in getListeners()) {
+                listener.onChangeListClicked()
+            }
         }
     }
 

@@ -7,6 +7,7 @@ interface ListView: ObservableView<ListView.Listener> {
         fun onItemClicked(item: ItemListAdapter.SingleItem)
         fun onItemAdded(item: ItemListAdapter.SingleItem)
         fun onDeleteItemsClicked()
+        fun onChangeListClicked()
     }
 
     fun updateListItems(items: List<ItemListAdapter.SingleItem>)

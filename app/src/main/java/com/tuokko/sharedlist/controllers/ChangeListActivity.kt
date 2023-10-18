@@ -1,6 +1,8 @@
 package com.tuokko.sharedlist.controllers
 
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.tuokko.sharedlist.models.AppPreferences
@@ -10,6 +12,11 @@ import com.tuokko.sharedlist.views.ChangeListView
 class ChangeListActivity : BaseActivity(), ChangeListView.Listener {
     companion object {
         const val TAG = "ChangeListActivity"
+        fun start(context: Context) {
+            val intent = Intent(context, ChangeListActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(intent)
+        }
     }
 
     private lateinit var view: ChangeListView

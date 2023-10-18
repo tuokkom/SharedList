@@ -2,19 +2,16 @@ package com.tuokko.sharedlist.controllers
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.tuokko.sharedlist.R
+import com.tuokko.sharedlist.models.AppPreferences
+import com.tuokko.sharedlist.models.Navigator
 import com.tuokko.sharedlist.views.listview.ItemListAdapter
 import com.tuokko.sharedlist.views.listview.ListView
-import com.tuokko.sharedlist.views.listview.ListViewImp
 
-class MainListActivity : AppCompatActivity(), ListView.Listener {
+class MainListActivity : BaseActivity(), ListView.Listener {
 
     companion object {
         private const val TAG = "MainActivity"
@@ -24,61 +21,59 @@ class MainListActivity : AppCompatActivity(), ListView.Listener {
         }
     }
 
-    private lateinit var listView: ListView
-    private var listID: String? = null
+    private lateinit var view: ListView
+    private lateinit var prefs: AppPreferences
+    private lateinit var navigator: Navigator
+    private var listId: String? = null
     private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        view = compositionRoot.mainListView
+        prefs = compositionRoot.appPreferences
+        navigator = compositionRoot.navigator
 
-        listView = ListViewImp(layoutInflater, null)
-        listView.addListener(this)
+        listId = prefs.getListId()
 
-        getCurrentListID()
+        if (listId.isNullOrEmpty()) {
+            navigator.navigateToChangeListActivity()
+        }
 
         updateListFromDatabase()
 
-        setContentView(listView.getRootView())
+        setContentView(view.getRootView())
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.list_view_menu, menu)
-        return true
+    override fun onStart() {
+        super.onStart()
+        view.addListener(this)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        return when (item.itemId) {
-            R.id.changeListMenuItem -> {
-                val intent = Intent(this, ChangeListActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun onStop() {
+        super.onStop()
+        view.removeListener(this)
     }
-
 
     private fun addItemToList(item: String) {
         Log.d(TAG, "Adding item to recyclerView $item")
-        if (listID == null) return
+        if (listId == null) return
         val listItemProperties = hashMapOf(
             "checked" to false
         )
-        db.collection(listID!!).document(item).set(listItemProperties)
+        db.collection(listId!!).document(item).set(listItemProperties)
             .addOnSuccessListener {
                 updateListFromDatabase()
             }
             .addOnFailureListener {
-                Log.d(TAG, "Adding the item: $item to list: $listID failed, error ${it.message}")
+                Log.d(TAG, "Adding the item: $item to list: $listId failed, error ${it.message}")
             }
     }
 
     private fun updateListFromDatabase() {
-        if (listID == null) return
+        if (listId == null) return
 
 
-        db.collection(listID!!).get()
+        db.collection(listId!!).get()
             .addOnSuccessListener { result ->
                 val itemList = mutableListOf<ItemListAdapter.SingleItem>()
                 for (item in result) {
@@ -87,25 +82,15 @@ class MainListActivity : AppCompatActivity(), ListView.Listener {
                     val checkState: Boolean = item.data["checked"] as Boolean
                     itemList.add(ItemListAdapter.SingleItem(item.id, checkState))
                 }
-                listView.updateListItems(itemList)
+                view.updateListItems(itemList)
         }
 
 
-    }
-
-    private fun getCurrentListID() {
-        val sharedPref = getSharedPreferences(getString(R.string.shared_prefs), MODE_PRIVATE)
-        listID = sharedPref.getString(getString(R.string.list_key), "")
-        if (listID.isNullOrEmpty()) {
-            val intent = Intent(this, ChangeListActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
     }
 
     private fun deleteSelectedItems() {
-        if (listID == null) return
-        db.collection(listID!!).get()
+        if (listId == null) return
+        db.collection(listId!!).get()
                 .addOnSuccessListener { result ->
                     for (item in result) {
                         val checkState: Boolean = item.data["checked"] as Boolean
@@ -118,13 +103,13 @@ class MainListActivity : AppCompatActivity(), ListView.Listener {
     }
 
     private fun deleteSingleItem(itemName: String) {
-        if (listID == null) return
-        db.collection(listID!!).document(itemName)
+        if (listId == null) return
+        db.collection(listId!!).document(itemName)
                 .delete()
                 .addOnSuccessListener {
                     Log.d(TAG, "deleteSingleItem() Item: $itemName deleted")
                     //itemListAdapter.deleteItemFromList(itemName)
-                    listView.deleteListItem(itemName)
+                    view.deleteListItem(itemName)
                 }
                 .addOnFailureListener {
                     Log.d(TAG, "Failed to delete item: $itemName, error: ${it.message}")
@@ -133,10 +118,10 @@ class MainListActivity : AppCompatActivity(), ListView.Listener {
 
     override fun onItemClicked(item: ItemListAdapter.SingleItem) {
         Log.d(TAG, "onItemClicked() Item name: ${item.name}")
-        db.collection(listID!!).document(item.name).update("checked", item.checked)
+        db.collection(listId!!).document(item.name).update("checked", item.checked)
             .addOnSuccessListener {
                 Log.d(TAG, "onItemClicked() Item updated to state: ${item.checked}")
-                listView.updateListItem(item)
+                view.updateListItem(item)
             }
             .addOnFailureListener {
                 Log.e(TAG, "onItemClicked() Item update failed")
@@ -155,5 +140,9 @@ class MainListActivity : AppCompatActivity(), ListView.Listener {
     override fun onDeleteItemsClicked() {
         Log.d(TAG, "onDeleteItemsClicked() Called")
         deleteSelectedItems()
+    }
+
+    override fun onChangeListClicked() {
+        navigator.navigateToChangeListActivity()
     }
 }

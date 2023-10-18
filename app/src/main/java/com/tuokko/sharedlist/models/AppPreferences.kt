@@ -20,6 +20,5 @@ class AppPreferences(private val context: Context) {
             AppCompatActivity.MODE_PRIVATE
         )
         return sharedPref.getString(context.getString(R.string.list_key), "")
-
     }
 }
