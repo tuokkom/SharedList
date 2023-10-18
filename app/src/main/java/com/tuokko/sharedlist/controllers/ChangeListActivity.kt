@@ -1,27 +1,30 @@
 package com.tuokko.sharedlist.controllers
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
 import android.util.Log
 import com.tuokko.sharedlist.models.AppPreferences
+import com.tuokko.sharedlist.models.Navigator
 import com.tuokko.sharedlist.views.ChangeListView
 
-class ChangeListActivity : AppCompatActivity(), ChangeListView.Listener {
+class ChangeListActivity : BaseActivity(), ChangeListView.Listener {
     companion object {
         const val TAG = "ChangeListActivity"
     }
 
     private lateinit var view: ChangeListView
-    private val prefs = AppPreferences(this)
+    private lateinit var prefs: AppPreferences
+    private lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        view = ChangeListView(layoutInflater, null)
-
-        setContentView(view.getRootView())
+        view = compositionRoot.changeListView
+        prefs = compositionRoot.appPreferences
+        navigator = compositionRoot.navigator
 
         updateListID()
+
+        setContentView(view.getRootView())
     }
 
     override fun onStart() {
@@ -30,21 +33,17 @@ class ChangeListActivity : AppCompatActivity(), ChangeListView.Listener {
     }
 
     override fun onStop() {
-        view.removeListener(this)
         super.onStop()
+        view.removeListener(this)
     }
 
     override fun onJoinListClicked(listId: String) {
-        joinList(listId)
+        Log.d(TAG, "onJoinListClicked() New list to join: $listId")
+        prefs.setListId(listId)
+        updateListID()
+        navigator.navigateToListActivity()
     }
 
-    private fun joinList(list: String) {
-        Log.d(TAG, "New list to join: $list")
-        prefs.setListId(list)
-        updateListID()
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
 
     private fun updateListID() {
         val listId = prefs.getListId() ?: return

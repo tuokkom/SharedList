@@ -1,9 +1,12 @@
 package com.tuokko.sharedlist.controllers
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tuokko.sharedlist.R
@@ -11,10 +14,14 @@ import com.tuokko.sharedlist.views.listview.ItemListAdapter
 import com.tuokko.sharedlist.views.listview.ListView
 import com.tuokko.sharedlist.views.listview.ListViewImp
 
-class MainActivity : AppCompatActivity(), ListView.Listener {
+class MainListActivity : AppCompatActivity(), ListView.Listener {
 
     companion object {
         private const val TAG = "MainActivity"
+        fun start(context: Context) {
+            val intent = Intent(context, MainListActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 
     private lateinit var listView: ListView
@@ -34,7 +41,6 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
         setContentView(listView.getRootView())
     }
 
-    /*
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.list_view_menu, menu)
         return true
@@ -52,7 +58,6 @@ class MainActivity : AppCompatActivity(), ListView.Listener {
         }
     }
 
-     */
 
     private fun addItemToList(item: String) {
         Log.d(TAG, "Adding item to recyclerView $item")
