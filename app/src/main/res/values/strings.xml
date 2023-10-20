@@ -6,6 +6,7 @@
     <string name="join_list">Join list</string>
     <string name="list_empty_error">List can\'t be empty</string>
     <string name="delete_selected">Delete selected</string>
+    <string name="add">Add</string>
 
 
     <string name="list_key">list</string>

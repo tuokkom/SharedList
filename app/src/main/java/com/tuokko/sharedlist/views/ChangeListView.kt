@@ -1,8 +1,10 @@
 package com.tuokko.sharedlist.views
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.tuokko.sharedlist.databinding.ActivityChangeListBinding
+import com.tuokko.sharedlist.databinding.ToolbarBinding
 import com.tuokko.sharedlist.views.common.BaseView
 
 class ChangeListView(inflater: LayoutInflater, parent: ViewGroup?) : BaseView<ChangeListView.Listener>() {
@@ -13,6 +15,8 @@ class ChangeListView(inflater: LayoutInflater, parent: ViewGroup?) : BaseView<Ch
 
     private var binding: ActivityChangeListBinding = ActivityChangeListBinding.inflate(inflater, parent, false)
 
+    private var toolBarBinding: ToolbarBinding = ToolbarBinding.inflate(inflater, binding.toolbar.root, true)
+
     init {
         setRootView(binding.root)
         binding.joinListButton.setOnClickListener {
@@ -20,6 +24,7 @@ class ChangeListView(inflater: LayoutInflater, parent: ViewGroup?) : BaseView<Ch
                 listener.onJoinListClicked(binding.listEditText.text.toString())
             }
         }
+        toolBarBinding.changeList.visibility = View.GONE
     }
 
     fun setCurrentListId(listId: String){

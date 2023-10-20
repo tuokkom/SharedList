@@ -17,7 +17,7 @@ class ListViewImp(inflater: LayoutInflater, parent: ViewGroup?): BaseView<ListVi
     private var binding: ActivityMainBinding = ActivityMainBinding.inflate(inflater, parent, false)
     private var itemListAdapter: ItemListAdapter = ItemListAdapter(this)
 
-    private var toolBarBinding: ToolbarBinding = ToolbarBinding.inflate(inflater, binding.toolbar, true)
+    private var toolBarBinding: ToolbarBinding = ToolbarBinding.inflate(inflater, binding.toolbar.root, true)
 
     init {
         setRootView(binding.root)
